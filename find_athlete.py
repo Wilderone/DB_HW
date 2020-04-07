@@ -57,19 +57,27 @@ def dif_calc(user, athlete):
 
 
 def find(id, session):
+
     qu = session.query(User).filter(User.id == id).first()
-    print(f'USER ID {qu.id}, NAME {qu.first_name}, LAST_NAME {qu.last_name}, DOB {qu.birthdate}, HEIGHT {qu.height}')
-    qa = session.query(Athlete).all()
-    height, age = dif_calc(qu, qa)
-    return height, age
+    if qu:
+        print(f'USER ID {qu.id}, NAME {qu.first_name}, LAST_NAME {qu.last_name}, DOB {qu.birthdate}, HEIGHT {qu.height}')
+        qa = session.query(Athlete).all()
+        height, age = dif_calc(qu, qa)
+        return height, age
+
+
 
 
 def main():
     session = connect_db()
-    id_to_find = int(input('ID for compare: '))
-    height, dob = find(id_to_find, session)
-    print(f'CLOSEST IN AGE ID {dob.id}, NAME {dob.name}, DOB {dob.birthdate}')
-    print(f'CLOSEST IN HEIGHT ID {height.id}, NAME {height.name}, HEIGHT {height.height}')
+    try:
+        id_to_find = int(input('ID for compare: '))
+        height, dob = find(id_to_find, session)
+        print(f'Athlete closest in AGE ID {dob.id}, NAME {dob.name}, DOB {dob.birthdate}')
+        print(f'Athlete closest in HEIGHT ID {height.id}, NAME {height.name}, HEIGHT {height.height}')
+    except (TypeError, ValueError):
+        print("No such ID!")
+
 
 
 if __name__ == '__main__':
